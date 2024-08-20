@@ -1,0 +1,80 @@
+trigger:
+- main  # Dispara el pipeline en cada cambio en la rama 'main'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  dockerImageName: 'hello-world'
+
+stages:
+- stage: ClonarRepositorio
+  jobs:
+  - job: ClonarRepositorio
+    steps:
+    - checkout: self
+
+- stage: CompilarAplicacion
+  jobs:
+  - job: CompilarAplicacion
+    steps:
+    - script: |
+        python3 -m pip install --upgrade pip
+        pip install -r requirements.txt
+        python3 -m py_compile hello.py
+      displayName: 'Compilar Aplicación'
+
+- stage: EjecutarPruebasUnitarias
+  jobs:
+  - job: EjecutarPruebasUnitarias
+    steps:
+    - script: |
+        pip install pytest
+        pytest tests/
+      displayName: 'Ejecutar Pruebas Unitarias'
+
+- stage: AnalisisCodigoEstatico
+  jobs:
+  - job: AnalisisCodigoEstatico
+    steps:
+    - script: |
+        pip install pylint
+        pylint hello.py
+      displayName: 'Análisis de Código Estático'
+
+- stage: AnalisisVulnerabilidades
+  jobs:
+  - job: AnalisisVulnerabilidades
+    steps:
+    - script: |
+        pip install bandit
+        bandit -r hello.py
+      displayName: 'Análisis de Vulnerabilidades'
+
+- stage: ConstruirImagenDocker
+  jobs:
+  - job: ConstruirImagenDocker
+    steps:
+    - script: |
+        docker build -t $(dockerImageName):$(Build.BuildId) .
+        docker tag $(dockerImageName):$(Build.BuildId) pruebatecnica.azurecr.io/mi-repo:latest
+        docker push pruebatecnica.azurecr.io/mi-repo:latest
+      displayName: 'Construir y Publicar Imagen Docker'
+
+- stage: DespliegueKubernetes
+  jobs:
+  - job: DespliegueKubernetes
+    steps:
+    - script: |
+        kubectl apply -f deployment.yaml
+      displayName: 'Despliegue en Kubernetes'
+
+- stage: Notificacion
+  jobs:
+  - job: Notificacion
+    steps:
+    - script: python send_email.py
+      displayName: 'Enviar notificación por correo electrónico'
+      env:
+        SENDGRID_API_KEY: $(SENDGRID_API_KEY)
+
