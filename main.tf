@@ -3,8 +3,8 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "example" {
-  name     = "rg-cicd-pipeline"
-  location = "East US"
+  name     = "Prueba"
+  location = "East US2"
 }
 
 resource "azurerm_kubernetes_cluster" "aks_cluster" {
