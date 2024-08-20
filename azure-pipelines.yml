@@ -5,7 +5,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  dockerImageName: 'mi-aplicacion'
+  dockerImageName: 'hello-world'
 
 stages:
 - stage: ClonarRepositorio
@@ -57,7 +57,7 @@ stages:
     steps:
     - script: |
         docker build -t $(dockerImageName):$(Build.BuildId) .
-        docker tag $(dockerImageName):$(Build.BuildId) <DockerRegistry>/<Repositorio>:latest
+        docker tag $(dockerImageName):$(Build.BuildId) pruebatecnica.azurecr.io/mi-repo:latest
         docker push pruebatecnica.azurecr.io/mi-repo:latest
       displayName: 'Construir y Publicar Imagen Docker'
 
