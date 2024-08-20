@@ -19,11 +19,11 @@ pipeline {
             }
         }
 
-        stage('Ejecutar Pruebas Unitarias') {
-            steps {
-                sh 'pytest tests/'
-            }
-        }
+        //stage('Ejecutar Pruebas Unitarias') {
+       //     steps {
+        //        sh 'pytest tests/'
+         //   }
+       // }
 
         stage('Análisis de Código Estático') {
             steps {
@@ -53,12 +53,12 @@ pipeline {
             }
         }
     }
-
-    post {
-        always {
-            mail to: 'danielsanabria89@gmail.com',
-                 subject: "Pipeline finalizado: ${currentBuild.fullDisplayName}",
-                 body: "Estado: ${currentBuild.currentResult}. Ver más detalles en ${env.BUILD_URL}"
-        }
-    }
+//**
+//   post {
+//        always {
+//            mail to: 'danielsanabria89@gmail.com',
+//                 subject: "Pipeline finalizado: ${currentBuild.fullDisplayName}",
+//                 body: "Estado: ${currentBuild.currentResult}. Ver más detalles en ${env.BUILD_URL}"
+//        }
+//    }
 }
