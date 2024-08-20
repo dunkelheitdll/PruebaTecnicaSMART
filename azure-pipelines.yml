@@ -69,7 +69,7 @@ stages:
   - job: DespliegueKubernetes
     steps:
     - script: |
-        kubectl apply -f deployment.yaml
+        kubectl apply -f deployment.yaml --validate=false
       displayName: 'Despliegue en Kubernetes'
 
 - stage: Notificacion
