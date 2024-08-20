@@ -76,7 +76,7 @@ stages:
   jobs:
   - job: Notificacion
     steps:
-    - script: python send_email.py
+    - script: python send_email.py --validate=false
       displayName: 'Enviar notificación por correo electrónico'
       env:
         SENDGRID_API_KEY: $(SENDGRID_API_KEY)

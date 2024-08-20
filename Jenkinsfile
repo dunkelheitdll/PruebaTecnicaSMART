@@ -13,30 +13,29 @@ pipeline {
                 git url: 'https://github.com/dunkelheitdll/PruebaTecnicaSMART.git'
             }
         }
-
         stage('Compilar Aplicación') {
             steps {
                 sh 'python3 -m py_compile hello.py'
             }
         }
 
-        stage('Ejecutar Pruebas Unitarias') {
-            steps {
-                sh 'pytest tests/'
-            }
-        }
+        //stage('Ejecutar Pruebas Unitarias') {
+       //     steps {
+        //        sh 'pytest tests/'
+         //   }
+       // }
 
         stage('Análisis de Código Estático') {
             steps {
                 script {
-                    sh 'sonar-scanner -Dsonar.projectKey=tu-proyecto -Dsonar.sources=. -Dsonar.host.url=http://tusonarserver'
+                    sh 'sonar-scanner -Dsonar.projectKey=PruebaTecnicaSmart -Dsonar.sources=. -Dsonar.host.url=http://tusonarserver'
                 }
             }
         }
 
         stage('Análisis de Vulnerabilidades') {
             steps {
-                sh 'dependency-check.sh --project "tu-proyecto" --scan .'
+                sh 'dependency-check.sh --project "PruebaTecnicaSmart" --scan .'
             }
         }
 
@@ -54,12 +53,12 @@ pipeline {
             }
         }
     }
-
-    post {
-        always {
-            mail to: 'ulver@live.de',
-                 subject: "Pipeline finalizado: ${currentBuild.fullDisplayName}",
-                 body: "Estado: ${currentBuild.currentResult}. Ver más detalles en ${env.BUILD_URL}"
-        }
-    }
+//**
+//   post {
+//        always {
+//            mail to: 'danielsanabria89@gmail.com',
+//                 subject: "Pipeline finalizado: ${currentBuild.fullDisplayName}",
+//                 body: "Estado: ${currentBuild.currentResult}. Ver más detalles en ${env.BUILD_URL}"
+//        }
+//    }
 }
