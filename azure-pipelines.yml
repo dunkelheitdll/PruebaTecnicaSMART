@@ -1,0 +1,64 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: UseGitVersion@5
+- checkout: self
+
+- script: |
+    python -m venv venv
+    source venv/bin/activate
+    pip install -r requirements.txt
+  displayName: 'Instalar dependencias'
+
+- script: |
+    python hello.py
+  displayName: 'Compilar aplicación'
+
+- script: |
+    pytest
+  displayName: 'Ejecutar pruebas unitarias'
+
+- task: SonarQubePrepare@4
+  inputs:
+    SonarQube: 'SonarQube'
+    scannerMode: 'CLI'
+    configMode: 'manual'
+    cliProjectKey: 'tu-proyecto'
+    cliSources: '.'
+
+- task: SonarQubeAnalyze@4
+
+- task: SonarQubePublish@4
+  inputs:
+    pollingTimeoutSec: '300'
+
+- script: |
+    trivy image tu-imagen
+  displayName: 'Análisis de Vulnerabilidades'
+
+- task: Docker@2
+  inputs:
+    containerRegistry: 'tu-registro'
+    repository: 'tu-imagen'
+    command: 'buildAndPush'
+    Dockerfile: '**/Dockerfile'
+    tags: |
+      $(Build.BuildId)
+
+- task: Kubernetes@1
+  inputs:
+    connectionType: 'Kubernetes Service Connection'
+    kubernetesServiceEndpoint: 'tu-conexion'
+    namespace: 'default'
+    command: 'apply'
+    useConfigurationFile: true
+    configuration: 'deployment.yaml'
+
+- task: SlackNotification@1
+  inputs:
+    slackConnection: 'tu-conexion'
+    message: 'El pipeline ha terminado con el estado: $(Build.Status)'
