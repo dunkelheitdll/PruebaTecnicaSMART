@@ -52,7 +52,7 @@ steps:
 - task: Kubernetes@1
   inputs:
     connectionType: 'Kubernetes Service Connection'
-    kubernetesServiceEndpoint: 'tu-conexion'
+    kubernetesServiceEndpoint: 'pruebatecnica-dns-rvv2ao64.hcp.eastus2.azmk8s.io'
     namespace: 'default'
     command: 'apply'
     useConfigurationFile: true
