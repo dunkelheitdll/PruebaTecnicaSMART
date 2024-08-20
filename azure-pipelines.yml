@@ -1,64 +1,79 @@
 trigger:
-- main
+- main  # Dispara el pipeline en cada cambio en la rama 'main'
 
 pool:
   vmImage: 'ubuntu-latest'
 
-steps:
-- task: UseGitVersion@5
-- checkout: self
+variables:
+  dockerImageName: 'mi-aplicacion'
 
-- script: |
-    python -m venv venv
-    source venv/bin/activate
-    pip install -r requirements.txt
-  displayName: 'Instalar dependencias'
+stages:
+- stage: ClonarRepositorio
+  jobs:
+  - job: ClonarRepositorio
+    steps:
+    - checkout: self
 
-- script: |
-    python hello.py
-  displayName: 'Compilar aplicación'
+- stage: CompilarAplicacion
+  jobs:
+  - job: CompilarAplicacion
+    steps:
+    - script: |
+        python3 -m pip install --upgrade pip
+        pip install -r requirements.txt
+        python3 -m py_compile hello.py
+      displayName: 'Compilar Aplicación'
 
-- script: |
-    pytest
-  displayName: 'Ejecutar pruebas unitarias'
+- stage: EjecutarPruebasUnitarias
+  jobs:
+  - job: EjecutarPruebasUnitarias
+    steps:
+    - script: |
+        pip install pytest
+        pytest tests/
+      displayName: 'Ejecutar Pruebas Unitarias'
 
-- task: SonarQubePrepare@4
-  inputs:
-    SonarQube: 'SonarQube'
-    scannerMode: 'CLI'
-    configMode: 'manual'
-    cliProjectKey: 'PruebaTecnica'
-    cliSources: '.'
+- stage: AnalisisCodigoEstatico
+  jobs:
+  - job: AnalisisCodigoEstatico
+    steps:
+    - script: |
+        pip install pylint
+        pylint hello.py
+      displayName: 'Análisis de Código Estático'
 
-- task: SonarQubeAnalyze@4
+- stage: AnalisisVulnerabilidades
+  jobs:
+  - job: AnalisisVulnerabilidades
+    steps:
+    - script: |
+        pip install bandit
+        bandit -r hello.py
+      displayName: 'Análisis de Vulnerabilidades'
 
-- task: SonarQubePublish@4
-  inputs:
-    pollingTimeoutSec: '300'
+- stage: ConstruirImagenDocker
+  jobs:
+  - job: ConstruirImagenDocker
+    steps:
+    - script: |
+        docker build -t $(dockerImageName):$(Build.BuildId) .
+        docker tag $(dockerImageName):$(Build.BuildId) <DockerRegistry>/<Repositorio>:latest
+        docker push pruebatecnica.azurecr.io/mi-repo:latest
+      displayName: 'Construir y Publicar Imagen Docker'
 
-- script: |
-    trivy image tu-imagen
-  displayName: 'Análisis de Vulnerabilidades'
+- stage: DespliegueKubernetes
+  jobs:
+  - job: DespliegueKubernetes
+    steps:
+    - script: |
+        kubectl apply -f deployment.yaml
+      displayName: 'Despliegue en Kubernetes'
 
-- task: Docker@2
-  inputs:
-    containerRegistry: 'pruebatecnica.azurecr.io'
-    repository: 'mcr.microsoft.com/k8se/quickstart:latest'
-    command: 'buildAndPush'
-    Dockerfile: '**/Dockerfile'
-    tags: |
-      $(Build.BuildId)
-
-- task: Kubernetes@1
-  inputs:
-    connectionType: 'Kubernetes Service Connection'
-    kubernetesServiceEndpoint: 'pruebatecnica-dns-rvv2ao64.hcp.eastus2.azmk8s.io'
-    namespace: 'default'
-    command: 'apply'
-    useConfigurationFile: true
-    configuration: 'deployment.yaml'
-
-- task: SlackNotification@1
-  inputs:
-    slackConnection: 'tu-conexion'
-    message: 'El pipeline ha terminado con el estado: $(Build.Status)'
+- stage: Notificacion
+  jobs:
+  - job: Notificacion
+    steps:
+    - script: |
+        echo "Pipeline finalizado con éxito"
+        # Aquí puedes configurar el envío de correo electrónico o notificación por Slack
+      displayName: 'Notificación del estado del pipeline'
