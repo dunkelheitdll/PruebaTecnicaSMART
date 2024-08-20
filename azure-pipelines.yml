@@ -73,7 +73,8 @@ stages:
   jobs:
   - job: Notificacion
     steps:
-    - script: |
-        echo "Pipeline finalizado con éxito"
-        # Aquí puedes configurar el envío de correo electrónico o notificación por Slack
-      displayName: 'Notificación del estado del pipeline'
+    - script: python send_email.py
+      displayName: 'Enviar notificación por correo electrónico'
+      env:
+        SENDGRID_API_KEY: $(SENDGRID_API_KEY)
+
