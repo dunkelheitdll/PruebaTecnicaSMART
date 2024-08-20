@@ -13,7 +13,11 @@ pipeline {
                 git url: 'https://github.com/dunkelheitdll/PruebaTecnicaSMART.git'
             }
         }
-
+        stage('Instalar Dependencias') {
+            steps {
+                sh 'pip install pytest'
+            }
+        }
         stage('Compilar Aplicación') {
             steps {
                 sh 'python3 -m py_compile hello.py'
@@ -57,7 +61,7 @@ pipeline {
 
     post {
         always {
-            mail to: 'ulver@live.de',
+            mail to: 'danielsanabria90@gmail.com',
                  subject: "Pipeline finalizado: ${currentBuild.fullDisplayName}",
                  body: "Estado: ${currentBuild.currentResult}. Ver más detalles en ${env.BUILD_URL}"
         }
