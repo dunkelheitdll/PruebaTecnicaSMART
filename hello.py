@@ -10,7 +10,7 @@ def say_hello():
 
     Esta función no toma ningún argumento y no retorna ningún valor.
     """
-    print("Hello, World!")
+   return "Hello World"
 
 """
 Validacion del codigo para pruebas unitarias
