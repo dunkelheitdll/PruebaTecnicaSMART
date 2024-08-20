@@ -24,7 +24,7 @@ steps:
   displayName: 'Análisis de Código Estático'
 
 - script: |
-    dependency-check.sh --project "tu-proyecto" --scan .
+    dependency-check.sh --project "PruebaTecnicaSmartDevOps" --scan .
   displayName: 'Análisis de Vulnerabilidades'
 
 - task: Docker@2
