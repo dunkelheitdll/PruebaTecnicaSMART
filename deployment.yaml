@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: hello-world
-        image: tu-registro/tu-imagen:latest
+        image: pruebatecnica.azurecr.io/mi-repo:latest
         ports:
         - containerPort: 80
