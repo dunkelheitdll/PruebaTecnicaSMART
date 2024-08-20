@@ -2,11 +2,11 @@ provider "kubernetes" {
   config_path = "~/.kube/config"
 }
 
-resource "kubernetes_deployment" "example" {
+resource "kubernetes_deployment" "prueba" {
   metadata {
-    name = "example-deployment"
+    name = "prueba-deployment"
     labels = {
-      app = "example"
+      app = "prueba"
     }
   }
 
@@ -15,21 +15,21 @@ resource "kubernetes_deployment" "example" {
 
     selector {
       match_labels = {
-        app = "example"
+        app = "prueba"
       }
     }
 
     template {
       metadata {
         labels = {
-          app = "example"
+          app = "prueba"
         }
       }
 
       spec {
         container {
-          image = "tu-registro/tu-imagen:latest"
-          name  = "example"
+          image = "pruebatecnica.azurecr.io/mi-repo:latest"
+          name  = "prueba"
         }
       }
     }
