@@ -2,6 +2,7 @@ trigger:
 - main  # Dispara el pipeline en cada cambio en la rama 'main'
 
 pool:
+  name: Default
   vmImage: 'ubuntu-latest'
 
 variables:
@@ -17,6 +18,8 @@ stages:
 - stage: CompilarAplicacion
   jobs:
   - job: CompilarAplicacion
+  pool:
+    name: Default
     steps:
     - script: |
         python3 -m pip install --upgrade pip
