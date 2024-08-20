@@ -12,11 +12,10 @@ def say_hello():
     """
     return "Hello, World!"
 
-"""
-Validacion del codigo para pruebas unitarias
-"""
+
+#Validacion del codigo para pruebas unitarias
+
 if __name__ == "__main__":
-    """
-    Retorna valor que será validado
-    """
+    
+    #Retorna valor que será validado
     print(say_hello())
