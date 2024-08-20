@@ -27,7 +27,7 @@ steps:
     SonarQube: 'SonarQube'
     scannerMode: 'CLI'
     configMode: 'manual'
-    cliProjectKey: 'tu-proyecto'
+    cliProjectKey: 'PruebaTecnica'
     cliSources: '.'
 
 - task: SonarQubeAnalyze@4
@@ -42,8 +42,8 @@ steps:
 
 - task: Docker@2
   inputs:
-    containerRegistry: 'tu-registro'
-    repository: 'tu-imagen'
+    containerRegistry: 'pruebatecnica.azurecr.io'
+    repository: 'mcr.microsoft.com/k8se/quickstart:latest'
     command: 'buildAndPush'
     Dockerfile: '**/Dockerfile'
     tags: |
