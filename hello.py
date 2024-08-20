@@ -1,8 +1,13 @@
-# Programa en Python para imprimir "Hello, World!"
-# hello.py
+"""
+hello.py
+
+Este módulo contiene una función para imprimir el mensaje "Hello, World!".
+"""
 
 def say_hello():
-    return "Hello, World!"
+    """
+    Imprime el mensaje "Hello, World!" en la consola.
 
-if __name__ == "__main__":
-    print(say_hello())
+    Esta función no toma ningún argumento y no retorna ningún valor.
+    """
+    print("Hello, World!")
