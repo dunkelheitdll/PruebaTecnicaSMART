@@ -13,11 +13,6 @@ pipeline {
                 git url: 'https://github.com/dunkelheitdll/PruebaTecnicaSMART.git'
             }
         }
-        stage('Instalar Dependencias') {
-            steps {
-                sh 'pip3 install pytest'
-            }
-        }
         stage('Compilar Aplicación') {
             steps {
                 sh 'python3 -m py_compile hello.py'
