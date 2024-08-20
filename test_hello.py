@@ -1,4 +1,4 @@
-# tests/test_hello.py
+# test_hello.py
 
 import unittest
 from hello import say_hello
