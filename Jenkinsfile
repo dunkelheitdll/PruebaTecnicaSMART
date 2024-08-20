@@ -29,14 +29,14 @@ pipeline {
         stage('Análisis de Código Estático') {
             steps {
                 script {
-                    sh 'sonar-scanner -Dsonar.projectKey=tu-proyecto -Dsonar.sources=. -Dsonar.host.url=http://tusonarserver'
+                    sh 'sonar-scanner -Dsonar.projectKey=PruebaTecnicaSmart -Dsonar.sources=. -Dsonar.host.url=http://tusonarserver'
                 }
             }
         }
 
         stage('Análisis de Vulnerabilidades') {
             steps {
-                sh 'dependency-check.sh --project "tu-proyecto" --scan .'
+                sh 'dependency-check.sh --project "PruebaTecnicaSmart" --scan .'
             }
         }
 
