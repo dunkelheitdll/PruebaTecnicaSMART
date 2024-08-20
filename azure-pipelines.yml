@@ -33,7 +33,7 @@ stages:
     steps:
     - script: |
         pip install pytest
-        pytest tests/
+        pytest test_hello.py
       displayName: 'Ejecutar Pruebas Unitarias'
 
 - stage: AnalisisCodigoEstatico
