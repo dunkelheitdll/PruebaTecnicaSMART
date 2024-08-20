@@ -15,7 +15,7 @@ pipeline {
         }
         stage('Instalar Dependencias') {
             steps {
-                sh 'pip install pytest'
+                sh 'pip3 install pytest'
             }
         }
         stage('Compilar Aplicación') {
@@ -61,7 +61,7 @@ pipeline {
 
     post {
         always {
-            mail to: 'danielsanabria90@gmail.com',
+            mail to: 'danielsanabria89@gmail.com',
                  subject: "Pipeline finalizado: ${currentBuild.fullDisplayName}",
                  body: "Estado: ${currentBuild.currentResult}. Ver más detalles en ${env.BUILD_URL}"
         }
